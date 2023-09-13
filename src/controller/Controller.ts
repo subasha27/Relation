@@ -29,7 +29,9 @@ class relationCrud {
             const validation = childSchema.validate(childData);
             if (validation.error) return res.send({ message: validation.error.details[0].message });
             const existingParentData = await child_navigation.findOne({ where: { name: childData.name } });
-            if (existingParentData) return res.status(200).send({ message: "child Already exists" })
+            if (existingParentData) return res.status(200).send({ message: "child Already exists" });
+            const parentCheck = await Parent_navigation.findOne({where:{id:childData.parent_id}});
+            if (!parentCheck) return res.status(200).send({ message: "Parent does not exists" });
             const parent = await child_navigation.create(childData);
             const id = parent.id
             return res.status(200).send({ message: "child created succesfully", id })

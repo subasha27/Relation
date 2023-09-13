@@ -46,6 +46,9 @@ class relationCrud {
                 const existingParentData = yield childModel_1.default.findOne({ where: { name: childData.name } });
                 if (existingParentData)
                     return res.status(200).send({ message: "child Already exists" });
+                const parentCheck = yield parentModel_1.default.findOne({ where: { id: childData.parent_id } });
+                if (!parentCheck)
+                    return res.status(200).send({ message: "Parent does not exists" });
                 const parent = yield childModel_1.default.create(childData);
                 const id = parent.id;
                 return res.status(200).send({ message: "child created succesfully", id });
